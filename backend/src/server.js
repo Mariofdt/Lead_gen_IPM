@@ -28,6 +28,27 @@ app.get('/api/me', requireAuth, (req, res) => {
   res.json({ ok: true });
 });
 
+// Endpoint pubblici per le città e template
+app.get('/api/cities', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT id, name, region FROM cities ORDER BY name');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Errore nel recupero delle città:', error);
+    res.status(500).json({ error: 'Errore interno del server' });
+  }
+});
+
+app.get('/api/email-templates', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT id, name, subject, body FROM email_templates WHERE is_active = true ORDER BY name');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Errore nel recupero dei template:', error);
+    res.status(500).json({ error: 'Errore interno del server' });
+  }
+});
+
 app.get('/api/leads', requireAuth, async (req, res) => {
   const result = await pool.query(`
     SELECT 
