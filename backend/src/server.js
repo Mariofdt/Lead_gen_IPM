@@ -341,6 +341,21 @@ app.delete('/api/leads/clear', requireAuth, async (req, res) => {
   }
 });
 
+// Get single lead
+app.get('/api/leads/:id', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query('SELECT * FROM leads WHERE id = $1', [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Lead not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error fetching lead:', error);
+    res.status(500).json({ error: 'Failed to fetch lead' });
+  }
+});
+
 // Delete single lead
 app.delete('/api/leads/:id', requireAuth, async (req, res) => {
   try {
