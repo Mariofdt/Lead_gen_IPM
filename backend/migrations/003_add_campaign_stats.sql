@@ -8,3 +8,5 @@ ADD COLUMN IF NOT EXISTS last_updated TIMESTAMP NULL;
 -- Aggiungi indice per performance
 CREATE INDEX IF NOT EXISTS idx_campaigns_created_at ON public.campaigns(created_at);
 CREATE INDEX IF NOT EXISTS idx_campaigns_last_updated ON public.campaigns(last_updated);
+
+

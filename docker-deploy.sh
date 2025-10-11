@@ -212,3 +212,5 @@ echo "5. 🗄️ Esegui migrazioni database:"
 echo "   docker-compose exec backend npm run migrate"
 echo ""
 echo -e "${GREEN}🎯 L'applicazione sarà disponibile localmente!${NC}"
+
+

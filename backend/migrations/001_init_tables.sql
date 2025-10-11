@@ -64,3 +64,5 @@ DROP TRIGGER IF EXISTS trg_leads_updated_at ON public.leads;
 CREATE TRIGGER trg_leads_updated_at BEFORE UPDATE ON public.leads
 FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
+
+

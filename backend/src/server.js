@@ -7,20 +7,20 @@ const app = express();
 app.use(cors({ origin: ['http://localhost:5173'], credentials: true }));
 app.use(express.json());
 
-app.get('/health', (_req, res) => {
+app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-const { requireAuth } = require('./auth');
-const { pool } = require('./db');
-const { sendEmailBatch } = require('./email');
-const { scrapeCity } = require('./scraper');
+const { requireAuth } = require('./auth.js');
+const { pool } = require('./db.js');
+const { sendEmailBatch } = require('./email.js');
+const { scrapeCity } = require('./scraper.js');
 
-app.get('/api/me', requireAuth, (_req, res) => {
+app.get('/api/me', requireAuth, (req, res) => {
   res.json({ ok: true });
 });
 
-app.get('/api/leads', requireAuth, async (_req, res) => {
+app.get('/api/leads', requireAuth, async (req, res) => {
   const result = await pool.query(`
     SELECT 
       l.id, 
@@ -47,7 +47,7 @@ app.get('/api/leads', requireAuth, async (_req, res) => {
   res.json(result.rows);
 });
 
-app.get('/api/email-templates', requireAuth, async (_req, res) => {
+app.get('/api/email-templates', requireAuth, async (req, res) => {
   const result = await pool.query(
     'SELECT id, name, subject, body, is_active, created_at, updated_at FROM public.email_templates ORDER BY id'
   );
@@ -118,7 +118,7 @@ app.delete('/api/email-templates/:id', requireAuth, async (req, res) => {
   }
 });
 
-app.get('/api/stats', requireAuth, async (_req, res) => {
+app.get('/api/stats', requireAuth, async (req, res) => {
   const q = await pool.query(`
     SELECT
       COUNT(*)::int as total,
@@ -135,13 +135,13 @@ app.get('/api/stats', requireAuth, async (_req, res) => {
   res.json({ ...row, completion_rate: completionRate, emailed_rate: emailedRate });
 });
 
-app.get('/api/cities', requireAuth, async (_req, res) => {
+app.get('/api/cities', requireAuth, async (req, res) => {
   const result = await pool.query('SELECT id, name, region FROM public.cities ORDER BY region, name LIMIT 200');
   res.json(result.rows);
 });
 
 // Campaigns endpoints
-app.get('/api/campaigns', requireAuth, async (_req, res) => {
+app.get('/api/campaigns', requireAuth, async (req, res) => {
   const result = await pool.query(`
     SELECT 
       c.id,
@@ -163,7 +163,7 @@ app.get('/api/campaigns', requireAuth, async (_req, res) => {
 });
 
 app.post('/api/campaigns', requireAuth, async (req, res) => {
-  const { name } = req.body as { name: string };
+  const { name } = req.body;
   if (!name) return res.status(400).json({ error: 'Nome campagna richiesto' });
   
   const result = await pool.query(
@@ -173,7 +173,7 @@ app.post('/api/campaigns', requireAuth, async (req, res) => {
   res.json(result.rows[0]);
 });
 
-app.post('/api/campaigns/refresh-stats', requireAuth, async (_req, res) => {
+app.post('/api/campaigns/refresh-stats', requireAuth, async (req, res) => {
   try {
     // Prima aggiorna le statistiche base
     const statsResult = await pool.query(`
@@ -207,12 +207,12 @@ app.post('/api/campaigns/refresh-stats', requireAuth, async (_req, res) => {
 });
 
 app.post('/api/send-campaign', requireAuth, async (req, res) => {
-  const { leadIds, templateId } = req.body as { leadIds: number[]; templateId: number };
+  const { leadIds, templateId } = req.body;
   if (!Array.isArray(leadIds) || !templateId) return res.status(400).json({ error: 'Payload non valido' });
   const tpl = await pool.query('SELECT subject, body, name FROM public.email_templates WHERE id=$1', [templateId]);
   if (!tpl.rowCount) return res.status(404).json({ error: 'Template non trovato' });
   const leads = await pool.query('SELECT id, email FROM public.leads WHERE id = ANY($1::bigint[]) AND email IS NOT NULL', [leadIds]);
-  const emails = leads.rows.map((r) => r.email as string).filter(Boolean);
+  const emails = leads.rows.map((r) => r.email).filter(Boolean);
   if (!emails.length) return res.json({ sent: 0 });
   await sendEmailBatch(emails, tpl.rows[0].subject, tpl.rows[0].body, templateId);
   await pool.query(
@@ -300,7 +300,7 @@ app.get('/api/email-preview/:templateId', async (req, res) => {
 });
 
 // Clear all leads
-app.delete('/api/leads/clear', requireAuth, async (_req, res) => {
+app.delete('/api/leads/clear', requireAuth, async (req, res) => {
   try {
     const result = await pool.query('DELETE FROM leads');
     res.json({ message: `Deleted ${result.rowCount} leads` });
@@ -354,7 +354,7 @@ app.post('/api/scrape', requireAuth, async (req, res) => {
 
 const port = process.env.PORT || 4000;
 // Settings endpoints
-app.get('/api/settings', requireAuth, async (_req, res) => {
+app.get('/api/settings', requireAuth, async (req, res) => {
   // Restituisce le impostazioni di default per ora
   res.json({
     sendgrid_api_key: process.env.SENDGRID_API_KEY ? '***' : '',

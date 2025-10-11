@@ -156,3 +156,5 @@ Una volta completati tutti i passaggi, avrai:
 - ✅ Applicazione completamente funzionante
 
 L'URL finale sarà quello del frontend Vercel, che si connetterà automaticamente al backend Railway e al database Supabase.
+
+

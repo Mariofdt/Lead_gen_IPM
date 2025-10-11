@@ -1,19 +1,7 @@
 const { chromium } = require('playwright');
-const { pool } = require('./db');
+const { pool } = require('./db.js');
 
-type Lead = {
-  company_name: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-  website?: string;
-  city?: string;
-  region?: string | undefined;
-  search_type?: string;
-  business_category?: string;
-};
-
-async function saveLead(lead: Lead) {
+async function saveLead(lead) {
   const exists = await pool.query(
     `SELECT id FROM public.leads WHERE lower(company_name)=lower($1) AND lower(COALESCE(city,''))=lower(COALESCE($2,'')) LIMIT 1`,
     [lead.company_name, lead.city || '']
@@ -26,7 +14,7 @@ async function saveLead(lead: Lead) {
   );
 }
 
-async function extractEmailFromElement(element: any): Promise<string | null> {
+async function extractEmailFromElement(element) {
   try {
     // Cerca email nel testo dell'elemento
     const text = await element.innerText();
@@ -35,7 +23,7 @@ async function extractEmailFromElement(element: any): Promise<string | null> {
     
     if (emails && emails.length > 0) {
       // Filtra email valide (non no-reply, info generiche, etc.)
-      const validEmails = emails.filter((email: string) => 
+      const validEmails = emails.filter((email) => 
         !/no-reply|noreply|donotreply|info@|admin@|webmaster@|postmaster@/i.test(email)
       );
       
@@ -51,7 +39,7 @@ async function extractEmailFromElement(element: any): Promise<string | null> {
   }
 }
 
-async function extractEmailFromSite(page: any, url: string): Promise<string | null> {
+async function extractEmailFromSite(page, url) {
   try {
     console.log(`Visiting: ${url}`);
     
@@ -73,7 +61,7 @@ async function extractEmailFromSite(page: any, url: string): Promise<string | nu
     
     if (emails && emails.length > 0) {
       // Filtra email valide (meno restrittivo per trovare più email)
-      const validEmails = emails.filter((email: string) => 
+      const validEmails = emails.filter((email) => 
         !/no-reply|noreply|donotreply|webmaster@|postmaster@|example\.com|test\.com|localhost/i.test(email)
       );
       
@@ -84,12 +72,12 @@ async function extractEmailFromSite(page: any, url: string): Promise<string | nu
     
     // Cerca anche nei link mailto
     try {
-      const mailtoLinks = await page.$$eval('a[href^="mailto:"]', (links: any[]) => 
+      const mailtoLinks = await page.$$eval('a[href^="mailto:"]', (links) => 
         links.map(link => link.href.replace('mailto:', ''))
       );
       
       if (mailtoLinks.length > 0) {
-        const validMailto = mailtoLinks.filter((email: string) => 
+        const validMailto = mailtoLinks.filter((email) => 
           !/no-reply|noreply|donotreply|webmaster@|postmaster@|example\.com|test\.com/i.test(email)
         );
         if (validMailto.length > 0) {
@@ -102,7 +90,7 @@ async function extractEmailFromSite(page: any, url: string): Promise<string | nu
     
     // Cerca nelle pagine di contatto
     try {
-      const contactLinks = await page.$$eval('a[href*="contact"], a[href*="contatti"], a[href*="contatto"]', (links: any[]) => 
+      const contactLinks = await page.$$eval('a[href*="contact"], a[href*="contatti"], a[href*="contatto"]', (links) => 
         links.map(link => link.href)
       );
       
@@ -115,7 +103,7 @@ async function extractEmailFromSite(page: any, url: string): Promise<string | nu
           const contactEmails = contactContent.match(emailRegex);
           
           if (contactEmails && contactEmails.length > 0) {
-            const validContactEmails = contactEmails.filter((email: string) => 
+            const validContactEmails = contactEmails.filter((email) => 
               !/no-reply|noreply|donotreply|webmaster@|postmaster@|example\.com|test\.com/i.test(email)
             );
             if (validContactEmails.length > 0) {
@@ -137,7 +125,7 @@ async function extractEmailFromSite(page: any, url: string): Promise<string | nu
   }
 }
 
-function determineBusinessCategory(title: string): string {
+function determineBusinessCategory(title) {
   const titleLower = title.toLowerCase();
   
   // Categorie business basate su parole chiave nel titolo
@@ -188,10 +176,10 @@ function determineBusinessCategory(title: string): string {
   return 'Altro';
 }
 
-async function scrapeCity(city: string, region?: string, max: number = 25) {
+async function scrapeCity(city, region, max = 25) {
   const query = `vendita registratori di cassa ${city}`;
-  let browser: Browser | null = null;
-  const results: Lead[] = [];
+  let browser = null;
+  const results = [];
   try {
     browser = await chromium.launch({ 
       headless: true,
@@ -240,7 +228,7 @@ async function scrapeCity(city: string, region?: string, max: number = 25) {
       'a[href^="http"]:not([href*="google.com"]):not([href*="youtube.com"]):not([href*="facebook.com"])'
     ];
     
-    let items: any[] = [];
+    let items = [];
     for (const selector of selectors) {
       items = await page.$$(selector);
       if (items.length > 0) {
@@ -252,7 +240,7 @@ async function scrapeCity(city: string, region?: string, max: number = 25) {
     console.log(`Processing ${items.length} items...`);
     
     // Estrai tutti i dati prima di processare
-    const itemsData: Array<{href: string, title: string}> = [];
+    const itemsData: Array<{href, title}> = [];
     
     for (const a of items) {
       try {
@@ -291,7 +279,7 @@ async function scrapeCity(city: string, region?: string, max: number = 25) {
       // Determina la categoria business basata sul titolo e contenuto
       const businessCategory = determineBusinessCategory(title);
       
-      const lead: Lead = {
+      const lead = {
         company_name: title.slice(0, 200),
         website: href,
         email: email,

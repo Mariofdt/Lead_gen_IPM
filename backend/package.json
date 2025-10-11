@@ -4,9 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js",
+    "dev": "node src/server.js",
+    "build": "echo 'No build needed for JS'",
+    "start": "node src/server.js",
     "migrate": "node scripts/migrate.js"
   },
   "keywords": [],

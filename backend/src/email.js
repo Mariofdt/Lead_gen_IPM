@@ -9,7 +9,7 @@ const sender = process.env.EMAIL_SENDER || 'contact@firstdigitaltrade.com';
 if (apiKey) sgMail.setApiKey(apiKey);
 
 // Funzione per scaricare il logo reale di IperMoney
-async function getLogoBase64(): Promise<string> {
+async function getLogoBase64() {
   try {
     const response = await fetch('https://scontent-mxp2-1.xx.fbcdn.net/v/t39.30808-1/495378485_10235460410787652_8117124632259264711_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=110&ccb=1-7&_nc_sid=2d3e12&_nc_ohc=PUuD01H58F8Q7kNvwGHQJ4b&_nc_oc=AdlPx--1P7zPEZC40lzczU2G2NVEAwANoCC6d7bdInas_GcLSFnG7kq6tPWwtQKibAU&_nc_zt=24&_nc_ht=scontent-mxp2-1.xx&_nc_gid=RtkqPdK1MoQ5nHb8hRe1uw&oh=00_AffBSJzHZPd_AL1hjUfIGwwwPq2vUVnPqZDuaz8EQRwUMA&oe=68E90103');
     if (!response.ok) {
@@ -30,9 +30,9 @@ async function getLogoBase64(): Promise<string> {
   }
 }
 
-async function sendEmailBatch(toList: string[], subject: string, body: string, templateId?: number) {
+async function sendEmailBatch(toList, subject, body, templateId) {
   if (!apiKey) throw new Error('SENDGRID_API_KEY non impostata');
-  const chunks: string[][] = [];
+  const chunks = [];
   for (let i = 0; i < toList.length; i += 25) chunks.push(toList.slice(i, i + 25));
 
   // Prepara l'allegato del logo

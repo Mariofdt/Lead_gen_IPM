@@ -146,3 +146,5 @@ echo ""
 echo -e "${GREEN}🎯 L'applicazione sarà live su Vercel!${NC}"
 echo ""
 echo "📖 Per maggiori dettagli: DEPLOYMENT_GUIDE.md"
+
+

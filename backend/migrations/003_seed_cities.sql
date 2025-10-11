@@ -34,3 +34,5 @@ INSERT INTO public.cities(name, region, population) VALUES
   ('Catania', 'Sicilia', 300000)
 ON CONFLICT DO NOTHING;
 
+
+
