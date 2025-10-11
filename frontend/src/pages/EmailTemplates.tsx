@@ -20,7 +20,6 @@ export function EmailTemplates() {
   const [isCreating, setIsCreating] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [previewMode, setPreviewMode] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [showTestModal, setShowTestModal] = useState(false);
   const [testSuccess, setTestSuccess] = useState<string | null>(null);

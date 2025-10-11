@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 
 interface TestEmailModalProps {
@@ -40,7 +40,7 @@ export function TestEmailModal({ isVisible, onClose, templateId, templateName, o
       });
 
       if (response.ok) {
-        const result = await response.json();
+        await response.json();
         onSuccess(email.trim());
         setEmail('');
         onClose();

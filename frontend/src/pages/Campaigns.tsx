@@ -15,12 +15,6 @@ interface Campaign {
   last_updated?: string;
 }
 
-interface SendGridStats {
-  opens: number;
-  clicks: number;
-  unique_opens: number;
-  unique_clicks: number;
-}
 
 function Campaigns() {
   const { getAuthHeaders } = useAuth();
