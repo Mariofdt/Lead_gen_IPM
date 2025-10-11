@@ -23,7 +23,7 @@ export function useAuth() {
     return () => subscription.unsubscribe();
   }, []);
 
-      const getAuthHeaders = useCallback(() => {
+      const getAuthHeaders = useCallback((): Record<string, string> => {
         if (session?.access_token) {
           return {
             'Authorization': `Bearer ${session.access_token}`,
