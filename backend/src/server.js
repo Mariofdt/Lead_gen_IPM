@@ -31,9 +31,29 @@ app.get('/api/me', requireAuth, (req, res) => {
 });
 
 // Endpoint pubblici per le città e template
+// Cache per le città (10 minuti)
+let citiesCache = null;
+let citiesCacheTime = 0;
+const CITIES_CACHE_DURATION = 10 * 60 * 1000; // 10 minuti
+
 app.get('/api/cities', async (req, res) => {
   try {
+    const now = Date.now();
+    
+    // Usa cache se disponibile e non scaduta
+    if (citiesCache && (now - citiesCacheTime) < CITIES_CACHE_DURATION) {
+      console.log('📦 Restituendo città dalla cache');
+      return res.json(citiesCache);
+    }
+    
+    console.log('🔄 Caricando città dal database...');
     const result = await pool.query('SELECT id, name, region FROM cities ORDER BY name');
+    
+    // Aggiorna cache
+    citiesCache = result.rows;
+    citiesCacheTime = now;
+    
+    console.log(`✅ Caricate ${result.rows.length} città in ${Date.now() - now}ms`);
     res.json(result.rows);
   } catch (error) {
     console.error('Errore nel recupero delle città:', error);
@@ -41,9 +61,29 @@ app.get('/api/cities', async (req, res) => {
   }
 });
 
+// Cache per i template email (10 minuti)
+let templatesCache = null;
+let templatesCacheTime = 0;
+const TEMPLATES_CACHE_DURATION = 10 * 60 * 1000; // 10 minuti
+
 app.get('/api/email-templates', async (req, res) => {
   try {
+    const now = Date.now();
+    
+    // Usa cache se disponibile e non scaduta
+    if (templatesCache && (now - templatesCacheTime) < TEMPLATES_CACHE_DURATION) {
+      console.log('📦 Restituendo template dalla cache');
+      return res.json(templatesCache);
+    }
+    
+    console.log('🔄 Caricando template dal database...');
     const result = await pool.query('SELECT id, name, subject, body FROM email_templates WHERE is_active = true ORDER BY name');
+    
+    // Aggiorna cache
+    templatesCache = result.rows;
+    templatesCacheTime = now;
+    
+    console.log(`✅ Caricati ${result.rows.length} template in ${Date.now() - now}ms`);
     res.json(result.rows);
   } catch (error) {
     console.error('Errore nel recupero dei template:', error);
@@ -51,31 +91,65 @@ app.get('/api/email-templates', async (req, res) => {
   }
 });
 
+// Cache per i leads (5 minuti)
+let leadsCache = null;
+let leadsCacheTime = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minuti
+
+// Funzione per invalidare la cache
+function invalidateCache() {
+  leadsCache = null;
+  citiesCache = null;
+  templatesCache = null;
+  console.log('🗑️ Cache invalidata');
+}
+
 app.get('/api/leads', requireAuth, async (req, res) => {
-  const result = await pool.query(`
-    SELECT 
-      l.id, 
-      l.company_name, 
-      l.city, 
-      l.region, 
-      l.status, 
-      l.email, 
-      l.phone, 
-      l.website, 
-      l.created_at, 
-      l.updated_at,
-      l.email_sent_date,
-      l.last_template_id,
-      l.last_template_name,
-      l.search_type,
-      l.business_category,
-      et.name as template_name
-    FROM public.leads l
-    LEFT JOIN public.email_templates et ON l.last_template_id = et.id
-    ORDER BY l.created_at DESC 
-    LIMIT 200
-  `);
-  res.json(result.rows);
+  try {
+    const now = Date.now();
+    
+    // Usa cache se disponibile e non scaduta
+    if (leadsCache && (now - leadsCacheTime) < CACHE_DURATION) {
+      console.log('📦 Restituendo leads dalla cache');
+      return res.json(leadsCache);
+    }
+    
+    console.log('🔄 Caricando leads dal database...');
+    const result = await pool.query(`
+      SELECT 
+        l.id, 
+        l.company_name, 
+        l.city, 
+        l.region, 
+        l.status, 
+        l.email, 
+        l.phone, 
+        l.website, 
+        l.created_at, 
+        l.updated_at,
+        l.email_sent_date,
+        l.last_template_id,
+        l.last_template_name,
+        l.search_type,
+        l.business_category,
+        l.notes,
+        et.name as template_name
+      FROM public.leads l
+      LEFT JOIN public.email_templates et ON l.last_template_id = et.id
+      ORDER BY l.created_at DESC 
+      LIMIT 200
+    `);
+    
+    // Aggiorna cache
+    leadsCache = result.rows;
+    leadsCacheTime = now;
+    
+    console.log(`✅ Caricati ${result.rows.length} leads in ${Date.now() - now}ms`);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Errore nel caricamento leads:', error);
+    res.status(500).json({ error: 'Errore interno del server' });
+  }
 });
 
 app.get('/api/email-templates', requireAuth, async (req, res) => {
@@ -383,6 +457,10 @@ app.patch('/api/leads/:id', requireAuth, async (req, res) => {
     if (result.rowCount === 0) {
       return res.status(404).json({ error: 'Lead not found' });
     }
+    
+    // Invalida la cache dei leads
+    invalidateCache();
+    
     res.json(result.rows[0]);
   } catch (error) {
     console.error('Error updating lead:', error);

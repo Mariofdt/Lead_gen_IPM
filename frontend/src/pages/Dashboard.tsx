@@ -25,6 +25,7 @@ export default function Dashboard() {
   const [selectedLead, setSelectedLead] = useState<any>(null);
   const [showLeadModal, setShowLeadModal] = useState(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
   
   // Filtri avanzati
   const [filters, setFilters] = useState({
@@ -39,30 +40,52 @@ export default function Dashboard() {
   useEffect(() => {
     (async () => {
       if (!session) return;
-      const res = await fetch(API_ENDPOINTS.leads, {
-        headers: getAuthHeaders(),
-      });
-      if (res.ok) {
-        setLeads(await res.json());
-      }
-      const r2 = await fetch(API_ENDPOINTS.emailTemplates, {
-        headers: getAuthHeaders(),
-      });
-      if (r2.ok) {
-        const templatesData = await r2.json();
-        setTemplates(templatesData);
-        if (templatesData.length > 0 && !selectedTemplateId) {
-          setSelectedTemplateId(templatesData[0].id);
+      
+      setLoading(true);
+      console.log('🔄 Caricamento dati dashboard...');
+      
+      try {
+        // Carica tutti i dati in parallelo per velocizzare
+        const [leadsRes, templatesRes, statsRes, citiesRes] = await Promise.all([
+          fetch(API_ENDPOINTS.leads, { headers: getAuthHeaders() }),
+          fetch(API_ENDPOINTS.emailTemplates, { headers: getAuthHeaders() }),
+          fetch(API_ENDPOINTS.stats, { headers: getAuthHeaders() }),
+          fetch(API_ENDPOINTS.cities, { headers: getAuthHeaders() })
+        ]);
+
+        if (leadsRes.ok) {
+          const leadsData = await leadsRes.json();
+          setLeads(leadsData);
+          console.log(`✅ Caricati ${leadsData.length} leads`);
         }
+        
+        if (templatesRes.ok) {
+          const templatesData = await templatesRes.json();
+          setTemplates(templatesData);
+          if (templatesData.length > 0 && !selectedTemplateId) {
+            setSelectedTemplateId(templatesData[0].id);
+          }
+          console.log(`✅ Caricati ${templatesData.length} template`);
+        }
+        
+        if (statsRes.ok) {
+          const statsData = await statsRes.json();
+          setStats(statsData);
+          console.log('✅ Caricate statistiche');
+        }
+        
+        if (citiesRes.ok) {
+          const citiesData = await citiesRes.json();
+          setCities(citiesData);
+          console.log(`✅ Caricate ${citiesData.length} città`);
+        }
+        
+        console.log('🎉 Caricamento completato!');
+      } catch (error) {
+        console.error('❌ Errore nel caricamento:', error);
+      } finally {
+        setLoading(false);
       }
-      const r3 = await fetch(API_ENDPOINTS.stats, {
-        headers: getAuthHeaders(),
-      });
-      if (r3.ok) setStats(await r3.json());
-      const r4 = await fetch(API_ENDPOINTS.cities, {
-        headers: getAuthHeaders(),
-      });
-      if (r4.ok) setCities(await r4.json());
     })();
   }, [session]);
 
@@ -312,6 +335,19 @@ export default function Dashboard() {
   };
 
   const sortedLeads = getSortedLeads();
+
+  // Mostra loading se i dati stanno caricando
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-cyan-400 mx-auto mb-4"></div>
+          <p className="modern-text-muted text-lg">Caricamento dati...</p>
+          <p className="modern-text-muted text-sm mt-2">Ottimizzando le prestazioni...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
