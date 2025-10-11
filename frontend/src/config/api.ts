@@ -1,5 +1,6 @@
-// Configurazione API
-export const API_BASE_URL = 'https://lead-gen-ipm.onrender.com';
+// Configurazione API - Supabase Edge Functions
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+export const API_BASE_URL = `${SUPABASE_URL}/functions/v1/leads-api`;
 
 // Endpoint API
 export const API_ENDPOINTS = {
@@ -23,4 +24,8 @@ export const API_ENDPOINTS = {
   
   // Pubblici per il form di contatto
   publicInterest: `${API_BASE_URL}/api/public/interest`,
+  
+  // Test endpoints
+  corsTest: `${API_BASE_URL}/api/cors-test`,
+  health: `${API_BASE_URL}/health`,
 };
