@@ -9,7 +9,9 @@ app.use(cors({
     'http://localhost:5173',
     'https://lead-gen-ipm.vercel.app',
     'https://lead-gen-ipm-e17j.vercel.app',
-    'https://lead-gen-oljhkl77t-mario-barbans-projects.vercel.app'
+    'https://lead-gen-oljhkl77t-mario-barbans-projects.vercel.app',
+    'https://shiny-cactus-b5d036.netlify.app',
+    'https://68ea6029a0f9200008e126de--shiny-cactus-b5d036.netlify.app'
   ], 
   credentials: true 
 }));
