@@ -13,6 +13,8 @@ import EmailPreview from './pages/EmailPreview'
 import ProtectedRoute from './routes/ProtectedRoute'
 import Landing from './pages/Landing'
 import HudDemo from './pages/HudDemo'
+import { ThemeProvider } from './contexts/ThemeContext'
+import { Particles } from './components/Particles'
 
 const router = createBrowserRouter([
   {
@@ -73,6 +75,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider>
+      <Particles count={50} />
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </StrictMode>
 )
