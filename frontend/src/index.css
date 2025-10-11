@@ -2,5 +2,400 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import Futuristic Theme */
-@import './styles/futuristic.css';
+/* Futuristic Design System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Futuristic Color Palette - Cyberpunk Theme */
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: rgba(255, 255, 255, 0.05);
+  --primary: #00ffff;
+  --secondary: #8b5cf6;
+  --accent: #ff00ff;
+  --muted: rgba(255, 255, 255, 0.4);
+  --border: rgba(255, 255, 255, 0.2);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #00ffff;
+  
+  /* Additional Theme Colors */
+  --primary-dark: #0099cc;
+  --primary-light: #33e0ff;
+  --secondary-dark: #7c3aed;
+  --secondary-light: #a78bfa;
+  --accent-dark: #cc00cc;
+  --accent-light: #ff33ff;
+  
+  /* Surface Colors */
+  --surface: #1a1a2e;
+  --surface-light: #2a2a3e;
+  --surface-elevated: #3a3a5c;
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #f1f5f9;
+  --text-muted: #cbd5e1;
+  --text-accent: #00ffff;
+  
+  /* Border Colors */
+  --border-light: rgba(255, 255, 255, 0.2);
+  --border-accent: #00ffff;
+  
+  /* Shadows */
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+  --shadow-neon: 0 0 20px rgba(0, 255, 255, 0.3), 0 0 40px rgba(0, 255, 255, 0.1);
+  --shadow-pink: 0 0 20px rgba(255, 0, 255, 0.3), 0 0 40px rgba(255, 0, 255, 0.1);
+  --shadow-purple: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(135deg, var(--background) 0%, #0a0a0a 50%, var(--surface) 100%);
+  background-attachment: fixed;
+  color: var(--foreground);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Starry Background Effect */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #00D4FF, transparent),
+    radial-gradient(2px 2px at 40px 70px, #FF6B9D, transparent),
+    radial-gradient(1px 1px at 90px 40px, #00FF88, transparent),
+    radial-gradient(1px 1px at 130px 80px, #8B5CF6, transparent),
+    radial-gradient(2px 2px at 160px 30px, #FF8C00, transparent);
+  background-repeat: repeat;
+  background-size: 200px 100px;
+  opacity: 0.3;
+  z-index: -1;
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.1; }
+  100% { opacity: 0.4; }
+}
+
+/* Modern Card System */
+.modern-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(20px);
+  padding: 40px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+  opacity: 0.8;
+}
+
+.modern-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-xl), var(--shadow-neon);
+  border-color: var(--border-accent);
+}
+
+.modern-card-elevated {
+  background: linear-gradient(135deg, rgba(22, 33, 62, 0.95) 0%, rgba(26, 26, 46, 0.98) 100%);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Modern Button System */
+.modern-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 32px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.5;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modern-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s;
+}
+
+.modern-btn:hover::before {
+  left: 100%;
+}
+
+.modern-btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: var(--background);
+  box-shadow: var(--shadow-neon);
+  border: 1px solid var(--primary);
+}
+
+.modern-btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 60px rgba(0, 255, 255, 0.2);
+}
+
+.modern-btn-secondary {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-light) 100%);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.modern-btn-secondary:hover {
+  background: linear-gradient(135deg, var(--surface-light) 0%, var(--surface-elevated) 100%);
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: var(--shadow-neon);
+}
+
+.modern-btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+}
+
+.modern-btn-ghost:hover {
+  background: rgba(0, 255, 255, 0.1);
+  color: var(--primary);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-neon);
+}
+
+/* Modern Input System */
+.modern-input {
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--input);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.modern-input:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 4px rgba(0, 255, 255, 0.2), var(--shadow-neon);
+  background: var(--input);
+}
+
+.modern-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Modern Table System */
+.modern-table {
+  width: 100%;
+  background: var(--card);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(20px);
+}
+
+.modern-table th {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-light) 100%);
+  color: var(--text-primary);
+  font-weight: 700;
+  padding: 24px 32px;
+  text-align: left;
+  border-bottom: 2px solid var(--border-accent);
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.modern-table th:hover {
+  background: linear-gradient(135deg, var(--surface-light) 0%, var(--surface-elevated) 100%);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--primary);
+}
+
+.modern-table td {
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.modern-table tr:hover {
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.05) 100%);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.modern-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Modern Typography */
+.modern-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0 0 16px 0;
+  text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.modern-subtitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 24px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modern-text {
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.modern-text-muted {
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Modern Stats Cards */
+.modern-stat-card {
+  background: linear-gradient(135deg, rgba(22, 33, 62, 0.9) 0%, rgba(26, 26, 46, 0.95) 100%);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 32px;
+  backdrop-filter: blur(20px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+}
+
+.modern-stat-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-xl), var(--shadow-neon);
+  border-color: var(--border-accent);
+}
+
+.modern-stat-value {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 16px 0 8px 0;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.modern-stat-label {
+  color: var(--text-muted);
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .modern-card {
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .modern-card {
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modern-card {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .modern-table th,
+  .modern-table td {
+    padding: 16px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modern-card {
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .modern-table th,
+  .modern-table td {
+    padding: 12px 16px;
+    font-size: 0.75rem;
+  }
+  .modern-title {
+    font-size: 2rem;
+  }
+  .modern-subtitle {
+    font-size: 1.25rem;
+  }
+}
