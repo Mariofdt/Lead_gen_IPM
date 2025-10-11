@@ -163,12 +163,25 @@ export const LeadDetailsModal: React.FC<LeadDetailsModalProps> = ({
             <span className="text-xl">📝</span>
             Note
           </div>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="modern-input h-32 resize-none"
-            placeholder="Aggiungi note su questo lead..."
-          />
+          <div className="modern-card p-6" style={{
+            background: 'linear-gradient(135deg, rgba(0, 123, 255, 0.15) 0%, rgba(0, 200, 255, 0.1) 100%)',
+            border: '1px solid rgba(0, 255, 255, 0.3)',
+            borderRadius: '16px',
+            boxShadow: '0 0 20px rgba(0, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+          }}>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full h-32 resize-none bg-transparent text-white placeholder-gray-300 focus:outline-none focus:ring-0 border-0 p-0"
+              placeholder="Aggiungi note su questo lead..."
+              style={{
+                background: 'transparent',
+                color: '#ffffff',
+                fontSize: '14px',
+                lineHeight: '1.5'
+              }}
+            />
+          </div>
         </div>
 
         {/* Actions */}
