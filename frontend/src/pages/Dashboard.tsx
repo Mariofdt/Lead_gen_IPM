@@ -255,7 +255,7 @@ export default function Dashboard() {
     try {
       if (!session) return;
       
-      await fetch(`/api/leads/${leadId}`, {
+      await fetch(API_ENDPOINTS.updateLead(leadId), {
         method: 'PATCH',
         headers: getAuthHeaders(),
         body: JSON.stringify({ notes }),
@@ -263,7 +263,7 @@ export default function Dashboard() {
       
       // Reload leads
       const leadsRes = await fetch(API_ENDPOINTS.leads, {
-        headers: { Authorization: `Bearer ${session.access_token}` },
+        headers: getAuthHeaders(),
       });
       if (leadsRes.ok) setLeads(await leadsRes.json());
     } catch (error) {
