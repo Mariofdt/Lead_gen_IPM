@@ -4,21 +4,69 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-app.use(cors({ 
-  origin: [
-    'http://localhost:5173',
-    'https://lead-gen-ipm.vercel.app',
-    'https://lead-gen-ipm-e17j.vercel.app',
-    'https://lead-gen-oljhkl77t-mario-barbans-projects.vercel.app',
-    'https://shiny-cactus-b5d036.netlify.app',
-    'https://68ea6029a0f9200008e126de--shiny-cactus-b5d036.netlify.app'
-  ], 
-  credentials: true 
-}));
+// Configurazione CORS più robusta
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Permetti richieste senza origin (es. Postman, mobile apps)
+    if (!origin) return callback(null, true);
+    
+    // Lista di domini permessi
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'http://localhost:4173',
+      // Vercel patterns
+      /^https:\/\/.*\.vercel\.app$/,
+      /^https:\/\/lead-gen-ipm.*\.vercel\.app$/,
+      // Netlify patterns
+      /^https:\/\/.*\.netlify\.app$/,
+      /^https:\/\/shiny-cactus-b5d036\.netlify\.app$/,
+      // Domini specifici
+      'https://lead-gen-ipm.vercel.app',
+      'https://lead-gen-ipm-e17j.vercel.app',
+      'https://lead-gen-oljhkl77t-mario-barbans-projects.vercel.app',
+      'https://shiny-cactus-b5d036.netlify.app',
+      'https://68ea6029a0f9200008e126de--shiny-cactus-b5d036.netlify.app'
+    ];
+    
+    // Controlla se l'origin è permesso
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (typeof allowedOrigin === 'string') {
+        return origin === allowedOrigin;
+      } else if (allowedOrigin instanceof RegExp) {
+        return allowedOrigin.test(origin);
+      }
+      return false;
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.log('🚫 CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar'],
+  optionsSuccessStatus: 200 // Per supportare legacy browsers
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
+});
+
+// Endpoint per testare CORS
+app.get('/api/cors-test', (req, res) => {
+  res.json({ 
+    status: 'CORS working!', 
+    origin: req.headers.origin,
+    timestamp: new Date().toISOString()
+  });
 });
 
 const { requireAuth } = require('./auth.js');
