@@ -157,7 +157,7 @@ export const LeadDetailsModal: React.FC<LeadDetailsModalProps> = ({
           </div>
         </div>
 
-        {/* Notes */}
+        {/* Notes - Updated for deploy */}
         <div className="mb-8">
           <div className="modern-subtitle mb-4 flex items-center gap-2">
             <span className="text-xl">📝</span>
