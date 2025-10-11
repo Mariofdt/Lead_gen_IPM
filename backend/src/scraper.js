@@ -240,7 +240,7 @@ async function scrapeCity(city, region, max = 25) {
     console.log(`Processing ${items.length} items...`);
     
     // Estrai tutti i dati prima di processare
-    const itemsData: Array<{href, title}> = [];
+    const itemsData = [];
     
     for (const a of items) {
       try {
