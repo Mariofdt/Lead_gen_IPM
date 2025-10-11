@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { API_ENDPOINTS } from '../config/api';
 
 interface TestEmailModalProps {
   isVisible: boolean;
@@ -30,7 +31,7 @@ export function TestEmailModal({ isVisible, onClose, templateId, templateName, o
     setError('');
 
     try {
-      const response = await fetch('/api/send-test-email', {
+      const response = await fetch(API_ENDPOINTS.sendTestEmail, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ 

@@ -39,13 +39,13 @@ export default function Dashboard() {
   useEffect(() => {
     (async () => {
       if (!session) return;
-      const res = await fetch('/api/leads', {
+      const res = await fetch(API_ENDPOINTS.leads, {
         headers: getAuthHeaders(),
       });
       if (res.ok) {
         setLeads(await res.json());
       }
-      const r2 = await fetch('/api/email-templates', {
+      const r2 = await fetch(API_ENDPOINTS.emailTemplates, {
         headers: getAuthHeaders(),
       });
       if (r2.ok) {
@@ -55,7 +55,7 @@ export default function Dashboard() {
           setSelectedTemplateId(templatesData[0].id);
         }
       }
-      const r3 = await fetch('/api/stats', {
+      const r3 = await fetch(API_ENDPOINTS.stats, {
         headers: getAuthHeaders(),
       });
       if (r3.ok) setStats(await r3.json());
@@ -92,7 +92,7 @@ export default function Dashboard() {
     setSending(true);
     try {
       if (!session) return;
-      const res = await fetch('/api/send-campaign', {
+      const res = await fetch(API_ENDPOINTS.sendCampaign, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ 
@@ -107,11 +107,11 @@ export default function Dashboard() {
         // Clear selection
         setSelected({});
         // Reload leads and stats
-        const leadsRes = await fetch('/api/leads', {
+        const leadsRes = await fetch(API_ENDPOINTS.leads, {
           headers: getAuthHeaders(),
         });
         if (leadsRes.ok) setLeads(await leadsRes.json());
-        const statsRes = await fetch('/api/stats', {
+        const statsRes = await fetch(API_ENDPOINTS.stats, {
           headers: getAuthHeaders(),
         });
         if (statsRes.ok) setStats(await statsRes.json());
@@ -146,7 +146,7 @@ export default function Dashboard() {
 
     try {
       if (!session) return;
-      const res = await fetch('/api/scrape', {
+      const res = await fetch(API_ENDPOINTS.scrape, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ city: scrapeCityName }),
@@ -156,11 +156,11 @@ export default function Dashboard() {
         const data = await res.json();
         setScrapeProgress(prev => ({ ...prev, found: data.scraped }));
         // Reload leads and stats
-        const leadsRes = await fetch('/api/leads', {
+        const leadsRes = await fetch(API_ENDPOINTS.leads, {
           headers: getAuthHeaders(),
         });
         if (leadsRes.ok) setLeads(await leadsRes.json());
-        const statsRes = await fetch('/api/stats', {
+        const statsRes = await fetch(API_ENDPOINTS.stats, {
           headers: getAuthHeaders(),
         });
         if (statsRes.ok) setStats(await statsRes.json());
@@ -236,11 +236,11 @@ export default function Dashboard() {
       }
       
       // Reload leads and stats
-      const leadsRes = await fetch('/api/leads', {
+      const leadsRes = await fetch(API_ENDPOINTS.leads, {
         headers: { Authorization: `Bearer ${session.access_token}` },
       });
       if (leadsRes.ok) setLeads(await leadsRes.json());
-      const statsRes = await fetch('/api/stats', {
+      const statsRes = await fetch(API_ENDPOINTS.stats, {
         headers: { Authorization: `Bearer ${session.access_token}` },
       });
       if (statsRes.ok) setStats(await statsRes.json());
@@ -262,7 +262,7 @@ export default function Dashboard() {
       });
       
       // Reload leads
-      const leadsRes = await fetch('/api/leads', {
+      const leadsRes = await fetch(API_ENDPOINTS.leads, {
         headers: { Authorization: `Bearer ${session.access_token}` },
       });
       if (leadsRes.ok) setLeads(await leadsRes.json());
@@ -275,7 +275,7 @@ export default function Dashboard() {
     try {
       if (!session) return;
       
-      const res = await fetch('/api/send-test-email', {
+      const res = await fetch(API_ENDPOINTS.sendTestEmail, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ email: 'mario@ipermoney.com' }),

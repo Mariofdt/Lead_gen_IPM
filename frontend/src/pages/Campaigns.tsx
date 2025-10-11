@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { API_ENDPOINTS } from '../config/api';
 
 interface Campaign {
   id: number;
@@ -27,7 +28,7 @@ function Campaigns() {
   const loadCampaigns = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/campaigns', {
+      const response = await fetch(API_ENDPOINTS.campaigns, {
         headers: getAuthHeaders()
       });
       if (response.ok) {
@@ -46,7 +47,7 @@ function Campaigns() {
   const refreshSendGridStats = async () => {
     try {
       setRefreshing(true);
-      const response = await fetch('/api/campaigns/refresh-stats', {
+      const response = await fetch(API_ENDPOINTS.refreshCampaignStats, {
         method: 'POST',
         headers: getAuthHeaders()
       });
@@ -73,7 +74,7 @@ function Campaigns() {
     }
 
     try {
-      const response = await fetch('/api/campaigns', {
+      const response = await fetch(API_ENDPOINTS.campaigns, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ name: newCampaignName })

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { API_ENDPOINTS } from '../config/api';
 
 function Settings() {
   const { getAuthHeaders } = useAuth();
@@ -19,7 +20,7 @@ function Settings() {
   const loadSettings = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/settings', {
+      const response = await fetch(API_ENDPOINTS.settings, {
         headers: getAuthHeaders()
       });
       if (response.ok) {
@@ -36,7 +37,7 @@ function Settings() {
   const handleSave = async () => {
     try {
       setSaving(true);
-      const response = await fetch('/api/settings', {
+      const response = await fetch(API_ENDPOINTS.settings, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify(settings)
