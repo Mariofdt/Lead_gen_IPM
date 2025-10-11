@@ -33,7 +33,7 @@ export function EmailTemplates() {
   const loadTemplates = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/email-templates', {
+      const response = await fetch('https://lead-gen-ipm.onrender.com/api/email-templates', {
         headers: getAuthHeaders()
       });
       if (response.ok) {

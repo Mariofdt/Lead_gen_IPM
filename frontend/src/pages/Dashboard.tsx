@@ -58,7 +58,7 @@ export default function Dashboard() {
         headers: getAuthHeaders(),
       });
       if (r3.ok) setStats(await r3.json());
-      const r4 = await fetch('/api/cities', {
+      const r4 = await fetch('https://lead-gen-ipm.onrender.com/api/cities', {
         headers: getAuthHeaders(),
       });
       if (r4.ok) setCities(await r4.json());
