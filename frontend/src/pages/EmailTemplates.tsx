@@ -100,7 +100,6 @@ export function EmailTemplates() {
     });
     setIsEditing(false);
     setIsCreating(false);
-    setPreviewMode(false);
   };
 
   const handleCreateNew = () => {
@@ -112,13 +111,11 @@ export function EmailTemplates() {
     });
     setIsCreating(true);
     setIsEditing(false);
-    setPreviewMode(false);
   };
 
   const handleEdit = () => {
     setIsEditing(true);
     setIsCreating(false);
-    setPreviewMode(false);
   };
 
   const handlePreview = () => {
@@ -175,7 +172,6 @@ export function EmailTemplates() {
   const handleCancel = () => {
     setIsEditing(false);
     setIsCreating(false);
-    setPreviewMode(false);
     if (selectedTemplate) {
       setFormData({
         name: selectedTemplate.name,
