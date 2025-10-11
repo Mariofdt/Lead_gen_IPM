@@ -13,6 +13,14 @@ export default function Login() {
     e.preventDefault();
     setError(null);
     setLoading(true);
+    
+    // Bypass temporaneo per test - rimuovi questo blocco quando crei l'utente
+    if (email === 'test@test.com' && password === 'test') {
+      setLoading(false);
+      navigate('/dashboard');
+      return;
+    }
+    
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) {
