@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import { ScrapingProgress } from '../components/ScrapingProgress';
 import { LeadDetailsModal } from '../components/LeadDetailsModal';
 import { API_ENDPOINTS } from '../config/api';
+import { ThemeToggle } from '../components/ThemeToggle';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -352,62 +353,65 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <div className="modern-card">
+      <div className="glass-strong hover-lift glow-cyan">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="modern-title">🚀 Dashboard Clienti</h1>
+            <h1 className="gradient-text text-4xl font-bold mb-4">🚀 Dashboard Clienti</h1>
             <p className="modern-text-muted">Panoramica completa delle applicazioni e gestione avanzata delle transazioni bancarie</p>
             <p className="modern-text-muted text-sm mt-2">Powered by Futuristic Technology</p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="modern-btn modern-btn-ghost"
-          >
-            🚪 Logout
-          </button>
+          <div className="flex gap-4">
+            <ThemeToggle />
+            <button
+              onClick={handleLogout}
+              className="btn-futuristic btn-futuristic-secondary"
+            >
+              🚪 Logout
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Stats Cards */}
       {stats && (
         <div className="modern-grid modern-grid-4">
-          <div className="modern-stat-card">
+          <div className="card-futuristic hover-lift glow-cyan">
             <div className="flex items-center justify-between mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg shadow-cyan-500/30">
+              <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg shadow-cyan-500/30 neon-pulse">
                 <span className="text-white text-2xl">👥</span>
               </div>
             </div>
-            <div className="modern-stat-value">{stats.total}</div>
+            <div className="text-3xl font-bold text-glow-cyan">{stats.total}</div>
             <div className="modern-stat-label">Totale Clienti</div>
             <div className="modern-text-muted text-sm mt-2">Applicazioni totali</div>
           </div>
-          <div className="modern-stat-card">
+          <div className="card-futuristic hover-lift glow-magenta">
             <div className="flex items-center justify-between mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/30">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/30 neon-pulse">
                 <span className="text-white text-2xl">✅</span>
               </div>
             </div>
-            <div className="modern-stat-value">{stats.email_sent}</div>
+            <div className="text-3xl font-bold text-glow-magenta">{stats.email_sent}</div>
             <div className="modern-stat-label">Completati</div>
             <div className="modern-text-muted text-sm mt-2">Processi finalizzati</div>
           </div>
-          <div className="modern-stat-card">
+          <div className="card-futuristic hover-lift glow-orange">
             <div className="flex items-center justify-between mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30 neon-pulse">
                 <span className="text-white text-2xl">🆕</span>
               </div>
             </div>
-            <div className="modern-stat-value">{stats.new_last_7d}</div>
+            <div className="text-3xl font-bold text-glow-orange">{stats.new_last_7d}</div>
             <div className="modern-stat-label">In Attesa</div>
             <div className="modern-text-muted text-sm mt-2">Nuovi (7 giorni)</div>
           </div>
-          <div className="modern-stat-card">
+          <div className="card-futuristic hover-lift glow-purple">
             <div className="flex items-center justify-between mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg shadow-pink-500/30">
+              <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg shadow-pink-500/30 neon-pulse">
                 <span className="text-white text-2xl">⏳</span>
               </div>
             </div>
-            <div className="modern-stat-value">{stats.not_contacted}</div>
+            <div className="text-3xl font-bold text-glow-purple">{stats.not_contacted}</div>
             <div className="modern-stat-label">Rifiutati</div>
             <div className="modern-text-muted text-sm mt-2">Da Contattare</div>
           </div>
@@ -415,8 +419,8 @@ export default function Dashboard() {
       )}
 
       {/* Actions */}
-      <div className="modern-card">
-        <h2 className="modern-subtitle mb-8 flex items-center gap-3">
+      <div className="glass-strong hover-lift glow-magenta">
+        <h2 className="gradient-text text-2xl font-bold mb-8 flex items-center gap-3">
           <span className="text-3xl">⚡</span>
           Azioni Avanzate
         </h2>
@@ -440,7 +444,7 @@ export default function Dashboard() {
               <button
                 onClick={handleScrape}
                 disabled={scraping || !scrapeCityName}
-                className="modern-btn modern-btn-primary px-8"
+                className="btn-futuristic btn-futuristic-primary px-8"
               >
                 {scraping ? '⏳ Scraping...' : '🚀 Cerca Dati'}
               </button>
@@ -458,7 +462,7 @@ export default function Dashboard() {
                   <select
                     value={selectedTemplateId || ''}
                     onChange={(e) => setSelectedTemplateId(Number(e.target.value))}
-                    className="modern-input"
+                    className="input-futuristic"
                     disabled={sending}
                   >
                     <option value="">Seleziona template</option>
@@ -484,13 +488,13 @@ export default function Dashboard() {
                   <button
                     onClick={handleSendCampaign}
                     disabled={sending || !templates.length || !selectedTemplateId || Object.values(selected).every(v => !v)}
-                    className="modern-btn modern-btn-primary px-8"
+                    className="btn-futuristic btn-futuristic-primary px-8"
                   >
                     {sending ? '⏳ Invio...' : '📧 Invia Campagna'}
                   </button>
                   <button
                     onClick={handleSendTestEmail}
-                    className="modern-btn modern-btn-secondary px-6"
+                    className="btn-futuristic btn-futuristic-secondary px-6"
                   >
                     🧪 Test Email
                   </button>
@@ -502,9 +506,9 @@ export default function Dashboard() {
       </div>
 
       {/* Leads Table */}
-      <div className="modern-card">
+      <div className="glass-strong hover-lift glow-purple">
         <div className="flex justify-between items-center mb-12">
-          <h2 className="modern-subtitle flex items-center gap-4">
+          <h2 className="gradient-text text-2xl font-bold flex items-center gap-4">
             <span className="text-4xl">👥</span>
             Lista Clienti
           </h2>
@@ -518,7 +522,7 @@ export default function Dashboard() {
             />
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="modern-btn modern-btn-ghost px-6"
+              className="btn-futuristic px-6"
             >
               🔧 Filtri Avanzati {Object.values(filters).some(v => v) && '●'}
             </button>
@@ -545,7 +549,7 @@ export default function Dashboard() {
                 <select
                   value={filters.city}
                   onChange={(e) => handleFilterChange('city', e.target.value)}
-                  className="modern-input"
+                  className="input-futuristic"
                 >
                   <option value="">Tutte le città</option>
                   {getUniqueCities().map(city => (
@@ -559,7 +563,7 @@ export default function Dashboard() {
                   type="date"
                   value={filters.dateFrom}
                   onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
-                  className="modern-input"
+                  className="input-futuristic"
                 />
               </div>
               <div>
@@ -568,7 +572,7 @@ export default function Dashboard() {
                   type="date"
                   value={filters.dateTo}
                   onChange={(e) => handleFilterChange('dateTo', e.target.value)}
-                  className="modern-input"
+                  className="input-futuristic"
                 />
               </div>
               <div>
@@ -578,7 +582,7 @@ export default function Dashboard() {
                   placeholder="es. registratori di cassa"
                   value={filters.searchType}
                   onChange={(e) => handleFilterChange('searchType', e.target.value)}
-                  className="modern-input"
+                  className="input-futuristic"
                 />
               </div>
               <div>
@@ -588,13 +592,13 @@ export default function Dashboard() {
                   placeholder="es. ristoranti, negozi"
                   value={filters.businessCategory}
                   onChange={(e) => handleFilterChange('businessCategory', e.target.value)}
-                  className="modern-input"
+                  className="input-futuristic"
                 />
               </div>
               <div className="flex items-end">
                 <button
                   onClick={clearFilters}
-                  className="modern-btn modern-btn-ghost w-full px-6"
+                  className="btn-futuristic w-full px-6"
                 >
                   🗑️ Cancella Filtri
                 </button>
@@ -603,7 +607,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        <div className="modern-table">
+        <div className="futuristic-table">
           <table className="w-full">
             <thead>
               <tr className="bg-gradient-to-r from-gray-800 to-gray-700">
@@ -753,7 +757,7 @@ export default function Dashboard() {
                         setSelectedLead(lead);
                         setShowLeadModal(true);
                       }}
-                      className="modern-btn modern-btn-ghost text-lg px-4 py-2"
+                      className="btn-futuristic text-lg px-4 py-2"
                       title="Visualizza dettagli"
                     >
                       👁️
