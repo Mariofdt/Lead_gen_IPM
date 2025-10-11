@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { EmailPreviewModal } from '../components/EmailPreviewModal';
 import { TestEmailModal } from '../components/TestEmailModal';
+import { API_ENDPOINTS } from '../config/api';
 
 interface EmailTemplate {
   id: number;
@@ -33,7 +34,7 @@ export function EmailTemplates() {
   const loadTemplates = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch('https://lead-gen-ipm.onrender.com/api/email-templates', {
+      const response = await fetch(API_ENDPOINTS.emailTemplates, {
         headers: getAuthHeaders()
       });
       if (response.ok) {
