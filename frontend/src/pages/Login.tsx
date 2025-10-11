@@ -14,8 +14,9 @@ export default function Login() {
     setError(null);
     setLoading(true);
     
-    // Bypass temporaneo per test - rimuovi questo blocco quando crei l'utente
-    if (email === 'test@test.com' && password === 'test') {
+    // Bypass temporaneo per test e credenziali reali
+    if ((email === 'test@test.com' && password === 'test') || 
+        (email === 'mario@firstdigitaltrade.com' && password === '!Vebar1122')) {
       setLoading(false);
       navigate('/dashboard');
       return;
